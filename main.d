@@ -7,6 +7,7 @@
  */
 
 import std.array;
+import std.file;
 import std.format;
 import std.stdio;
 import core.stdc.stdlib;
@@ -91,7 +92,7 @@ else
             if (printedFrom) {
                 stderr.writeln(":");
             }
-            context.loc().write(&stderr);
+            context.loc().write(&stderr());
             stderr.writeln(e.msg);
             exit(EXIT_FAILURE);
         }
