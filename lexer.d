@@ -182,6 +182,10 @@ struct Lexer(R) if (isInputRange!R)
                 case '\f':
                 case ESC.space:
                 case ESC.brk:
+                    // Slightly hacky, but treat the constituent parts of the UTF-8 BOM (EF BB BF) as whitespace so that it is ignored.
+                case '\xef':
+                case '\xbb':
+                case '\xbf':
                     src.popFront();
                     continue;
 
