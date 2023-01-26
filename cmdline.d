@@ -46,7 +46,7 @@ string[] tokenizeArguments(string s)
         char c = s[i];
         if (!quote)
 		{
-            if (c == ' ')
+            if (c == ' ' || c == '\r' || c == '\n')
             {
                 int from = lastSpace + 1;
                 int to = i;
