@@ -430,6 +430,7 @@ struct Lexer(R) if (isInputRange!R)
                     goto Lother;
 
                 case '/':
+                case '\\':
                     src.popFront();
                     if (!src.empty)
                     {
@@ -599,6 +600,7 @@ struct Lexer(R) if (isInputRange!R)
                                             continue;
 
                                         case '/':
+                                        case '\\':
                                             src.popFront();
                                             if (src.empty)
                                             {   c = 0;
@@ -807,11 +809,11 @@ struct Lexer(R) if (isInputRange!R)
                     front = TOK.other;
                     return;
 
-                case '\\':
-                     // \u or \U could be start of identifier
-                    src.popFront();
-                    err_fatal("unrecognized preprocessor token x%02x", c);
-                    assert(0);   // not handled yet
+//                case '\\':
+//                     // \u or \U could be start of identifier
+//                    src.popFront();
+//                    err_fatal("unrecognized preprocessor token x%02x", c);
+//                    assert(0);   // not handled yet
 
                 case ESC.expand:
                     static if (isContext)
