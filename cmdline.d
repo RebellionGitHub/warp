@@ -13,6 +13,7 @@ import util;
 import std.stdio;
 import std.range;
 import std.path;
+import std.file;
 import std.array;
 import std.algorithm;
 
@@ -33,6 +34,51 @@ struct Params
     bool stdout;
 }
 
+
+string[] tokenizeArguments(string s)
+{
+    string[] result;
+
+    char quote = '\0';
+    int lastSpace = -1;
+    for (int i=0; i<s.length; ++i)
+	{
+        char c = s[i];
+        if (!quote)
+		{
+            if (c == ' ')
+            {
+                int from = lastSpace + 1;
+                int to = i;
+                lastSpace = i;
+                if (to > from)
+				{
+                    result ~= [s[from..to]];
+				}
+			}
+            if (c == '"' || c == '\'')
+			{
+                quote = c;
+			}
+		}
+        else
+		{
+            if (c == quote)
+			{
+                quote = '\0';
+			}
+		}
+	}
+
+	ulong from = lastSpace + 1;
+	ulong to = s.length;
+	if (to > from)
+	{
+		result ~= [s[from..to]];
+	}
+
+    return result;
+}
 
 /******************************************
  * Parse the command line.
@@ -61,13 +107,23 @@ Options:
   -o filename       preprocessed output file
   --stdout          output to stdout
   -v                verbose
+  -f argsfile       read arguments from argsfile
 ");
         exit(EXIT_SUCCESS);
     }
 
     Params p;
 
-     getopt(args,
+    if (args.length == 3 && args[1] == "-f")
+    {
+        // Read in file named in args[2], tokenize and replace args.
+        string exe = args[0];
+        string contents = cast(string)(read(args[2]));
+        args = tokenizeArguments(contents);
+        insertInPlace(args, 0, exe);
+    }
+
+    getopt(args,
         std.getopt.config.passThrough,
         std.getopt.config.caseSensitive,
         "include|I",    &p.includes,
