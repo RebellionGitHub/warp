@@ -126,7 +126,8 @@ if (isInputRange!R)
                         isinteger = false;
                         return r;
                     }
-                    err_fatal("%s digit expected not '%s'", radix == 8 ? "octal" : "decimal", cast(char)c);
+                    //err_fatal("%s digit expected not '%s'", radix == 8 ? "octal" : "decimal", cast(char)c);
+                    goto Ldone; // Treat unexpected letters between A and D the same as any other unexpected letters.
                 }
                 r.popFront();
                 if (c >= 'a')
