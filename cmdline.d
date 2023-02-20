@@ -107,20 +107,25 @@ Options:
   -o filename       preprocessed output file
   --stdout          output to stdout
   -v                verbose
-  -f argsfile       read arguments from argsfile
+  -f argsfile       read arguments from argsfile. Must be first argument on command line
 ");
         exit(EXIT_SUCCESS);
     }
 
     Params p;
 
-    if (args.length == 3 && args[1] == "-f")
+    if (args.length >= 3 && args[1] == "-f")
     {
         // Read in file named in args[2], tokenize and replace args.
         string exe = args[0];
         string contents = cast(string)(read(args[2]));
+        // Store all subsequent arguments
+        string[] moreargs = args[3..$];
         args = tokenizeArguments(contents);
+        // args[0] is the exe
         insertInPlace(args, 0, exe);
+        // Restore subsequent arguments
+        args ~= moreargs;
     }
 
     getopt(args,
